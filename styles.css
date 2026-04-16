@@ -86,7 +86,7 @@ body {
 
 .scene-shell {
   width: min(100%, 430px);
-  min-height: min(82svh, 690px);
+  height: min(82svh, 690px);
   border-radius: var(--radius-lg);
   padding: clamp(16px, 4vw, 24px);
   background: linear-gradient(155deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03));
@@ -155,6 +155,7 @@ h1 {
 }
 
 .photo-stage {
+  --photo-scale: 1;
   width: 100%;
   margin: 6px 0 0;
   border-radius: 24px;
@@ -162,17 +163,30 @@ h1 {
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.25);
   box-shadow: var(--shadow);
+  background: rgba(7, 10, 15, 0.5);
+}
+
+@media (max-width: 540px) {
+  .photo-stage {
+    --photo-scale: 0.72;
+  }
 }
 
 .photo-main {
-  width: 100%;
+  width: calc(100% * var(--photo-scale));
+  margin: 0 auto;
   display: block;
+  border-radius: 16px;
   filter: contrast(1.1) brightness(0.95);
 }
 
 .photo-layer {
   position: absolute;
-  inset: 0;
+  left: calc((100% - (100% * var(--photo-scale))) / 2);
+  right: calc((100% - (100% * var(--photo-scale))) / 2);
+  top: 0;
+  bottom: 0;
+  border-radius: 16px;
   pointer-events: none;
 }
 
@@ -195,6 +209,36 @@ h1 {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: clamp(1.2rem, 5.8vw, 1.8rem);
   line-height: 1.25;
+}
+
+.closing-epilogue {
+  margin: 4px 0 0;
+  text-align: center;
+  font-family: "Parisienne", "Brush Script MT", cursive;
+  font-size: clamp(1.7rem, 8.2vw, 2.45rem);
+  line-height: 1.05;
+  color: #ffe0c7;
+  text-shadow: 0 0 18px rgba(255, 210, 180, 0.24);
+}
+
+.scene-shell.replay-card {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.scene-shell.replay-card .eyebrow,
+.scene-shell.replay-card h1 {
+  display: none;
+}
+
+.scene-shell.replay-card .scene-subtitle {
+  min-height: 0;
+}
+
+.scene-shell.replay-card .closing-epilogue {
+  margin: 0;
 }
 
 .tap-hint {

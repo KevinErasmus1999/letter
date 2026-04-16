@@ -52,6 +52,7 @@ const app = {
   photoStage: document.getElementById("photo-stage"),
   photoNote: document.getElementById("photo-note"),
   closingLines: document.getElementById("closing-lines"),
+  closingEpilogue: document.getElementById("closing-epilogue"),
   tapHint: document.getElementById("tap-hint"),
 };
 
@@ -139,8 +140,16 @@ function buildSlides(chunks) {
     type: "closing",
     eyebrow: "always",
     title: "Until then, every day is yours.",
-    subtitle: "Tap to replay",
+    subtitle: "Tap for one last card",
     closing: chunks[chunks.length - 1].slice(-2).join(" "),
+  });
+
+  slides.push({
+    type: "replay",
+    eyebrow: "",
+    title: "",
+    subtitle: "Tap to replay",
+    epilogue: "The end, but just our beginning",
   });
 
   return slides;
@@ -184,6 +193,11 @@ function onAdvance() {
   }
 
   if (current.type === "closing") {
+    goToSlide(state.slideIndex + 1);
+    return;
+  }
+
+  if (current.type === "replay") {
     goToSlide(0);
   }
 }
@@ -252,6 +266,7 @@ function renderSlide(index, immediate) {
     return;
   }
 
+  app.sceneShell.classList.toggle("replay-card", slide.type === "replay");
   app.sceneEyebrow.textContent = slide.eyebrow || "";
   app.sceneTitle.textContent = slide.title || "";
   app.sceneSubtitle.textContent = slide.subtitle || "";
@@ -259,8 +274,9 @@ function renderSlide(index, immediate) {
   app.photoStage.hidden = true;
   app.photoNote.hidden = true;
   app.closingLines.hidden = true;
+  app.closingEpilogue.hidden = true;
 
-  app.tapHint.textContent = slide.type === "closing" ? "Tap to replay" : "Tap anywhere";
+  app.tapHint.textContent = slide.type === "replay" ? "Tap to replay" : "Tap anywhere";
 
   if (slide.type === "poem") {
     const lineFragment = document.createDocumentFragment();
@@ -293,6 +309,16 @@ function renderSlide(index, immediate) {
       app.closingLines,
       { opacity: 0, y: 12, filter: "blur(8px)" },
       { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power2.out" },
+    );
+  }
+
+  if (slide.type === "replay") {
+    app.closingEpilogue.textContent = slide.epilogue || "The end, but just our beginning";
+    app.closingEpilogue.hidden = false;
+    gsap.fromTo(
+      app.closingEpilogue,
+      { opacity: 0, y: 10, filter: "blur(7px)" },
+      { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, delay: 0.16, ease: "power2.out" },
     );
   }
 
